@@ -1,6 +1,7 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import Products from "../public/Products";
 import Navbar from "../components/Navbar";
+import Cart from "../public/Cart";
 // import Home from "../views/Home";
 // import Navbar from "../components/Navbar";
 // import AllUrl from "../views/AllUrl";
@@ -23,10 +24,7 @@ const PublicLayout = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Routes>
             <Route path="/" element={<Products />} />
-            {/* <Route path="/all-urls" element={<AllUrl />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/documentation" element={<Documentation />} />
-            <Route path="/:shortCode" element={<Redirection />} /> */}
+            <Route path="/cart" element={<Cart />} />
           </Routes>
         </div>
       </div>

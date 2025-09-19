@@ -18,24 +18,46 @@ const Navbar = () => {
           <div>
             <Link
               to="/"
-              className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-purple-700 transition-all duration-300"
+              className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent hover:from-green-700 hover:to-emerald-700 transition-all duration-300"
               onClick={() => menuOpen && setMenuOpen(false)}
             >
-              Indi.ca
+              Bumpa
             </Link>
           </div>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <Link
+              to="/cart"
+              className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition-colors duration-200 flex"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                />
+              </svg>
+              <span className="bg-green-600 p-1 text-white rounded-full px-1 -ml-1 text-xs">
+                0
+              </span>
+            </Link>
+            <Link
               to="/login"
-              className="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+              className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition-colors duration-200"
             >
               Login
             </Link>
             <Link
               to="/signup"
-              className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-greem-700 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
             >
               Sign Up
             </Link>

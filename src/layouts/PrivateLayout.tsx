@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 // } from "../views/private/actions/actions";
 import Sidebar from "../components/Sidebar";
 import Dashboard from "../private/Dashboard";
+import Orders from "../private/Orders";
 
 const Private = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,14 +67,13 @@ const Private = () => {
             Hi, James
             {/* {loggedInUser?.firstName} {loggedInUser?.lastName} */}
           </div>
+
+          <div>300N cashback</div>
         </div>
         <div className="flex-1 p-6 bg-gray-100">
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/contacts" element={<Contact />} />
-            <Route path="/create-contact" element={<CreateContact />} />
-            <Route path="/contacts/:id" element={<ContactDetails />} />
-            <Route path="/contacts/edit/:id" element={<EditContact />} /> */}
+            <Route path="/home" element={<Dashboard />} />
+            <Route path="/orders" element={<Orders />} />
           </Routes>
         </div>
       </div>
