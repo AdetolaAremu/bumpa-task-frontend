@@ -1,10 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { useAppSelector } from "../store/Hook";
 
 const Navbar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const { userToken } = useAppSelector((state) => state.product);
 
   const isActive = (path: string) => currentPath === path;
 
@@ -49,18 +52,22 @@ const Navbar = () => {
                 0
               </span>
             </Link>
-            <Link
-              to="/login"
-              className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition-colors duration-200"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-greem-700 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-            >
-              Sign Up
-            </Link>
+            {!userToken && (
+              <>
+                <Link
+                  to="/login"
+                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-greem-700 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -110,20 +117,24 @@ const Navbar = () => {
           }`}
         >
           <div className="space-y-3 pt-4 border-t border-gray-100">
-            <Link
-              to="/login"
-              className="block w-full py-3 px-4 text-center text-gray-700 hover:text-blue-600 font-medium bg-gray-50 hover:bg-blue-50 rounded-lg transition-all duration-200"
-              onClick={() => setMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="block w-full py-3 px-4 text-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
-              onClick={() => setMenuOpen(false)}
-            >
-              Sign Up
-            </Link>
+            {!userToken && (
+              <>
+                <Link
+                  to="/login"
+                  className="block w-full py-3 px-4 text-center text-gray-700 hover:text-blue-600 font-medium bg-gray-50 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="block w-full py-3 px-4 text-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

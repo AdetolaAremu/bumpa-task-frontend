@@ -5,7 +5,7 @@ import type {
   IGetUserCart,
   ILoginUser,
 } from "../../interfaces/responses/Ecom.response";
-import { getAllProducts, loginUser } from "./Action";
+import { addToCart, getAllProducts, getUserCart, loginUser } from "./Action";
 
 interface AppState {
   products: IAllProducts["data"];
@@ -14,6 +14,7 @@ interface AppState {
   userToken: string | null;
   loading: boolean;
   error: string | null;
+  loginError: string | null;
 }
 
 const initialState: AppState = {
@@ -31,11 +32,12 @@ const initialState: AppState = {
     to: 0,
     total: 0,
   },
+  userToken: localStorage.getItem("token"),
   product: null,
   cart: null,
-  userToken: null,
   loading: false,
   error: null,
+  loginError: null,
 };
 
 const appSlice = createSlice({
@@ -59,11 +61,16 @@ const appSlice = createSlice({
     },
     clearUserToken: (state) => {
       state.userToken = null;
+      localStorage.removeItem("token");
       state.error = null;
       state.loading = false;
+      state.loginError = null;
     },
     clearError: (state) => {
       state.error = null;
+    },
+    clearLoginError: (state) => {
+      state.loginError = null;
     },
   },
   extraReducers: (builder) => {
@@ -83,15 +90,43 @@ const appSlice = createSlice({
 
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.loginError = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.userToken = action.payload?.token ?? null;
+        state.userToken = action.payload;
+        state.loginError = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload ?? "Login failed";
+        state.loginError = action.payload ?? "Login failed";
+      })
+
+      .addCase(addToCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cart = action.payload;
+      })
+      .addCase(addToCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to add to cart";
+      })
+
+      .addCase(getUserCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserCart.fulfilled, (state, action) => {
+        // console.log("Payload in reducer:", action.payload);
+        state.loading = false;
+        state.cart = action.payload;
+      })
+      .addCase(getUserCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch cart";
       });
   },
 });
@@ -102,6 +137,7 @@ export const {
   clearCart,
   clearUserToken,
   clearError,
+  clearLoginError, // <-- Export this
 } = appSlice.actions;
 
 export default appSlice.reducer;

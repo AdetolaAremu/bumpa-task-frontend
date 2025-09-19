@@ -2,6 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Products from "../public/Products";
 import Navbar from "../components/Navbar";
 import Cart from "../public/Cart";
+import LoginPage from "../public/Login";
 // import Home from "../views/Home";
 // import Navbar from "../components/Navbar";
 // import AllUrl from "../views/AllUrl";
@@ -25,6 +26,7 @@ const PublicLayout = () => {
           <Routes>
             <Route path="/" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </div>
       </div>
