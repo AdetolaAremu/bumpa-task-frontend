@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../store/Hook";
 import { getAllOrders } from "../store/Action";
 import type { AppDispatch } from "../store/Store";
-import type { IOrder } from "../../interfaces/responses/Ecom.response";
+import type { IOrder } from "../interfaces/responses/Ecom.response";
+import OrderDetailsModal from "../components/OrderDetailsModal";
+import { CloseIcon, EyeIcon } from "../components/SVG";
 
 const Orders = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,40 +18,6 @@ const Orders = () => {
     const params = { page: 1, pageSize: 20 };
     dispatch(getAllOrders(params));
   }, [dispatch]);
-
-  // Eye icon SVG
-  const EyeIcon = () => (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-
-  // Close icon SVG
-  const CloseIcon = () => (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="6" x2="6" y2="18" />
-      <line x1="6" y1="6" x2="18" y2="18" />
-    </svg>
-  );
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -78,7 +46,6 @@ const Orders = () => {
     setShowOrderDetails(false);
     setSelectedOrder(null);
   };
-
   if (loading) {
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
@@ -105,7 +72,6 @@ const Orders = () => {
             <p className="text-gray-500 text-lg">No orders found</p>
           </div>
         ) : (
-          /* Orders Table */
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
@@ -114,9 +80,6 @@ const Orders = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Order Code
                     </th>
-                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Customer
-                    </th> */}
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Date
                     </th>
@@ -188,145 +151,13 @@ const Orders = () => {
       </div>
 
       {showOrderDetails && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-screen overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Order Details</h2>
-              <button
-                onClick={closeOrderDetails}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <CloseIcon />
-              </button>
-            </div>
-
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Order Code
-                  </h3>
-                  <p className="text-sm text-gray-900">
-                    {selectedOrder.order_code}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Payment Status
-                  </h3>
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getStatusColor(
-                      selectedOrder.payment_status
-                    )}`}
-                  >
-                    {selectedOrder.payment_status}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Order Status
-                  </h3>
-                  <span
-                    className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getStatusColor(
-                      selectedOrder.order_status
-                    )}`}
-                  >
-                    {selectedOrder.order_status}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Order Date
-                  </h3>
-                  <p className="text-sm text-gray-900">
-                    {selectedOrder.created_at
-                      ? new Date(selectedOrder.created_at).toLocaleDateString()
-                      : "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Updated
-                  </h3>
-                  <p className="text-sm text-gray-900">
-                    {selectedOrder.updated_at
-                      ? new Date(selectedOrder.updated_at).toLocaleDateString()
-                      : "N/A"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">
-                  Order Items ({selectedOrder.items?.length || 0})
-                </h3>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="space-y-4">
-                    {selectedOrder.items && selectedOrder.items.length > 0 ? (
-                      selectedOrder.items.map((item, index) => (
-                        <div
-                          key={item.id || index}
-                          className="flex items-center gap-4 py-3 border-b border-gray-200 last:border-b-0"
-                        >
-                          {item.image && (
-                            <img
-                              src={item.image}
-                              alt={item.title}
-                              className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-gray-900 truncate">
-                              {item.title}
-                            </h4>
-                            <p className="text-sm text-gray-500">
-                              Quantity: {item.quantity}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              ₦{Number(item.price).toLocaleString()} each
-                            </p>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <p className="text-sm font-medium text-gray-900">
-                              ₦
-                              {Number(
-                                Number(item.price) * item.quantity
-                              ).toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-gray-500 text-center py-4">
-                        No items found
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-gray-200 pt-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-medium text-gray-900">
-                    Total Amount:
-                  </span>
-                  <span className="text-xl font-bold text-gray-900">
-                    ₦{Number(selectedOrder.total_amount).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
-              <button
-                onClick={closeOrderDetails}
-                className="w-full px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
+        <OrderDetailsModal
+          order={selectedOrder}
+          isOpen={showOrderDetails}
+          onClose={closeOrderDetails}
+          getStatusColor={getStatusColor}
+          CloseIcon={CloseIcon}
+        />
       )}
     </div>
   );

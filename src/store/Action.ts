@@ -2,8 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import type {
   IAllProducts,
   IGetUserCart,
-} from "../../interfaces/responses/Ecom.response";
-import type { IAllPagination } from "../../interfaces/types/Ecom.Type";
+} from "../interfaces/responses/Ecom.response";
+import type { IAllPagination } from "../interfaces/types/Ecom.type";
 import axiosInstance from "../util/AxiosInsance";
 
 const service_url = import.meta.env.VITE_BASE_URL;

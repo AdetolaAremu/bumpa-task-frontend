@@ -6,7 +6,7 @@ import {
   getUserCart,
   removeFromCart,
 } from "../store/Action";
-import type { IAllPagination } from "../../interfaces/types/Ecom.Type";
+import type { IAllPagination } from "../interfaces/types/Ecom.type";
 import type { AppDispatch } from "../store/Store";
 import { useAppSelector } from "../store/Hook";
 import { toast } from "react-toastify";
@@ -25,7 +25,6 @@ const Products = () => {
     };
     dispatch(getAllProducts(params));
     dispatch(getUserCart());
-    // console.log("cart", cart);
   }, [dispatch, searchTerm]);
 
   const handleAddToCart = async (product_id: number) => {

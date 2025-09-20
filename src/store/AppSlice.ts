@@ -10,7 +10,7 @@ import type {
   IUserAchievement,
   IUserBadge,
   IUserStats,
-} from "../../interfaces/responses/Ecom.response";
+} from "../interfaces/responses/Ecom.response";
 import {
   addToCart,
   clearUserCart,
