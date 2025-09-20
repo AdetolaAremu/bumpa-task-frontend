@@ -129,3 +129,115 @@ export const confirmPayment = createAsyncThunk<
     return thunkAPI.rejectWithValue(error.response.data.message);
   }
 });
+
+export const getUserStats = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("cart/getUserStats", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${service_url}/user/util/stats`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAllOrders = createAsyncThunk<
+  any,
+  IAllPagination,
+  { rejectValue: string }
+>("orders/getAllOrders", async (data, thunkAPI) => {
+  try {
+    const params = new URLSearchParams({
+      pageSize: data.pageSize.toString(),
+      page: data.page?.toString() || "1",
+      limit: data.searchQuery || "",
+    });
+
+    const response = await axiosInstance.get(
+      `${service_url}/util/orders?${params.toString()}`
+    );
+
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAllAchievements = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("user/allAchievements", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${service_url}/user/util/achievements`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getAllBadges = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("user/allBadges", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${service_url}/user/util/badges`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getUserAchievements = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("user/user-achievements", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${service_url}/user/util/user-achievements`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getUserBadges = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("user/user-badges", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${service_url}/user/util/user-badges`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const getUserCashBack = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("user/user-cashback", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(
+      `${service_url}/user/util/cashback-total`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});

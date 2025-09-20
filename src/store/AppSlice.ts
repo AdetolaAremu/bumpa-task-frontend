@@ -1,16 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type {
+  IAllBadges,
   IAllProducts,
   IGetAProduct,
   IGetUserCart,
   ILoginUser,
+  IOrdersResponse,
+  IUserAchievement,
+  IUserBadge,
+  IUserStats,
 } from "../../interfaces/responses/Ecom.response";
 import {
   addToCart,
   clearUserCart,
   confirmPayment,
+  getAllAchievements,
+  getAllBadges,
+  getAllOrders,
   getAllProducts,
+  getUserAchievements,
+  getUserBadges,
   getUserCart,
+  getUserCashBack,
+  getUserStats,
   loginUser,
   proceedToPayment,
 } from "./Action";
@@ -19,6 +31,15 @@ interface AppState {
   products: IAllProducts["data"];
   product: IGetAProduct["data"] | null;
   cart: IGetUserCart["data"] | null;
+
+  userStat: IUserStats["data"] | null;
+  allOrders: IOrdersResponse["data"] | null;
+  allBadges: IAllBadges["data"] | null;
+  allAchievements: IUserAchievement["data"] | null;
+  allUserAchievements: IUserAchievement["data"] | null;
+  allUserBadges: IUserBadge["data"] | null;
+  userCashback: string | null;
+
   userToken: string | null;
   getUrl: string | null;
   loading: boolean;
@@ -43,6 +64,13 @@ const initialState: AppState = {
   },
   userToken: localStorage.getItem("token"),
   product: null,
+  userStat: null,
+  allOrders: null,
+  allBadges: null,
+  allAchievements: null,
+  allUserAchievements: null,
+  allUserBadges: null,
+  userCashback: null,
   cart: null,
   getUrl: null,
   loading: false,
@@ -175,6 +203,97 @@ const appSlice = createSlice({
       .addCase(confirmPayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Failed to verify payment";
+      })
+
+      .addCase(getUserStats.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserStats.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userStat = action.payload;
+      })
+      .addCase(getUserStats.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch dashboard details";
+      })
+
+      .addCase(getAllOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allOrders = action.payload;
+      })
+      .addCase(getAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch orders";
+      })
+
+      .addCase(getAllAchievements.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllAchievements.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allAchievements = action.payload;
+      })
+      .addCase(getAllAchievements.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch achievements";
+      })
+
+      .addCase(getAllBadges.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllBadges.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allBadges = action.payload;
+      })
+      .addCase(getAllBadges.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch badges";
+      })
+
+      .addCase(getUserAchievements.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserAchievements.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUserAchievements = action.payload;
+      })
+      .addCase(getUserAchievements.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch achievements";
+      })
+
+      .addCase(getUserBadges.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserBadges.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allUserBadges = action.payload;
+      })
+      .addCase(getUserBadges.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch badges";
+      })
+
+      .addCase(getUserCashBack.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserCashBack.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userCashback = action.payload;
+      })
+      .addCase(getUserBadges.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch cashback";
       });
   },
 });

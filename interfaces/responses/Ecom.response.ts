@@ -105,3 +105,95 @@ export interface ILoginUser {
     token: string;
   };
 }
+
+export interface IUserStats {
+  success: boolean;
+  message: string;
+  data: {
+    total_products: string;
+    total_spent: string;
+    successful_orders: string;
+    achievements: string;
+  };
+}
+
+export interface IOrdersResponse {
+  success: boolean;
+  message: string;
+  data: {
+    current_page: number;
+    data: {
+      id: number;
+      order_code: string;
+      user_id: number;
+      total_amount: string;
+      payment_status: "paid" | "not_paid" | "failed" | string;
+      order_status: "pending" | "successful" | "canceled" | string;
+      transaction_type: string;
+      payment_reference: string;
+      cashback_unlocked: number;
+      created_at: string;
+      updated_at: string;
+      items: {
+        id: number;
+        order_id: number;
+        product_id: number;
+        quantity: number;
+        price: string;
+        title: string;
+        image: string;
+        created_at: string;
+        updated_at: string;
+      }[];
+    }[];
+  };
+}
+
+interface IBadge {
+  id: number;
+  name: string;
+  required_achievements: number;
+  is_active: number;
+}
+
+interface IAchievement {
+  id: number;
+  name: string;
+  condition_type: string;
+  condition_value: string;
+  is_active: number;
+}
+
+export interface IAllAcheivements {
+  success: boolean;
+  message: string;
+  data: IAchievement[];
+}
+
+export interface IAllBadges {
+  success: boolean;
+  message: string;
+  data: IBadge[];
+}
+
+export interface IUserAchievement {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    user_id: number;
+    achievement_id: number;
+    achievements: IAchievement;
+  };
+}
+
+export interface IUserBadge {
+  success: boolean;
+  message: string;
+  data: {
+    id: number;
+    user_id: number;
+    badge_id: number;
+    badges: IAllBadges;
+  };
+}

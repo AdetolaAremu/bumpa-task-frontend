@@ -140,9 +140,9 @@ const Dashboard = () => {
   // User progress data
   const userProgress = {
     currentPoints: 350,
-    currentBadge: badges[1], // Silver
-    nextBadge: badges[2], // Gold
-    progressToNext: 70, // 350/500 * 100 = 70%
+    currentBadge: badges[1],
+    nextBadge: badges[2],
+    progressToNext: 70,
   };
 
   const totalSpent = purchasedProducts.reduce(
@@ -152,6 +152,7 @@ const Dashboard = () => {
   const totalOrders = purchasedProducts.filter(
     (product) => product.status === "Delivered"
   ).length;
+
   const unlockedAchievements = achievements.filter(
     (achievement) => achievement.isUnlocked
   );
@@ -253,7 +254,7 @@ const Dashboard = () => {
     </svg>
   );
 
-  const getCategoryColor = (category) => {
+  const getCategoryColor = (category: string) => {
     switch (category) {
       case "purchase":
         return "from-blue-500 to-blue-600";
