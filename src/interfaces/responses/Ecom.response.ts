@@ -206,3 +206,15 @@ export interface IUserBadge {
     badges: IAllBadges;
   };
 }
+
+export interface IUserBadgeAchievementsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    unlocked_achievements: string[];
+    next_available_achievements: string[];
+    current_badge: string | null;
+    next_badge: string | null;
+    remaining_to_unlock_next_badge: number;
+  };
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify"; // or whatever toast library you're using
+import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../store/Hook";
 import type { IAllPagination } from "../interfaces/types/Ecom.type";
 import {
@@ -8,10 +8,6 @@ import {
   getUserCart,
   removeFromCart,
 } from "../store/Action";
-// import { useAppDispatch, useAppSelector } from '../hooks/redux';
-// import { getAllProducts } from '../actions/productActions';
-// import { addToCart, removeFromCart, getUserCart } from '../actions/cartActions';
-// import type { IAllPagination } from '../interfaces/requests/Ecom.request';
 
 const Products = () => {
   const dispatch = useAppDispatch();
@@ -45,7 +41,6 @@ const Products = () => {
     const resultAction = await dispatch(removeFromCart({ product_id }));
     if (removeFromCart.fulfilled.match(resultAction)) {
       toast.success("Removed from cart!");
-      // Refresh cart data to update UI immediately
       dispatch(getUserCart());
     } else {
       toast.error("Failed to remove from cart");

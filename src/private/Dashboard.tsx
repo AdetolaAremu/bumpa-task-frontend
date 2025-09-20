@@ -7,6 +7,7 @@ import {
   getAllBadges,
   getUserAchievements,
   getUserBadges,
+  userCombinedBadgeAndAchievements,
 } from "../store/Action";
 import { useAppSelector } from "../store/Hook";
 import StatCard from "../components/StatCard";
@@ -23,6 +24,7 @@ const Dashboard = () => {
     allBadges,
     allUserAchievements,
     allUserBadges,
+    combinedAchievementBadge,
     loading: gamificationLoading,
   } = useAppSelector((state) => state.gamification);
 
@@ -32,6 +34,7 @@ const Dashboard = () => {
     dispatch(getAllBadges());
     dispatch(getUserAchievements());
     dispatch(getUserBadges());
+    dispatch(userCombinedBadgeAndAchievements());
   }, [dispatch]);
 
   const unlockedAchievementIds = new Set(
@@ -46,6 +49,42 @@ const Dashboard = () => {
       : []
   );
 
+  const getBadgeEmoji = (badge: string) => {
+    switch (badge?.toLowerCase()) {
+      case "bronze":
+        return "🥉";
+      case "silver":
+        return "🥈";
+      case "gold":
+        return "🥇";
+      case "platinum":
+        return "💎";
+      default:
+        return "🎖️";
+    }
+  };
+
+  const getBadgeColor = (badge: string) => {
+    switch (badge?.toLowerCase()) {
+      case "bronze":
+        return "from-amber-50 to-orange-50 border-amber-200 text-amber-800";
+      case "silver":
+        return "from-gray-50 to-slate-50 border-gray-300 text-gray-800";
+      case "gold":
+        return "from-yellow-50 to-amber-50 border-yellow-300 text-yellow-800";
+      case "platinum":
+        return "from-purple-50 to-indigo-50 border-purple-300 text-purple-800";
+      default:
+        return "from-blue-50 to-indigo-50 border-blue-200 text-blue-800";
+    }
+  };
+
+  const isNextAvailable = (achievementName: string) => {
+    return combinedAchievementBadge?.next_available_achievements?.includes(
+      achievementName
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
@@ -57,8 +96,6 @@ const Dashboard = () => {
             <span className="ml-3 text-gray-600">Loading...</span>
           </div>
         )}
-
-        {/* User Stats */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard
@@ -86,6 +123,50 @@ const Dashboard = () => {
             borderColor="border-yellow-500"
           />
         </div>
+
+        {combinedAchievementBadge?.current_badge && (
+          <div className="mb-8">
+            <div
+              className={`bg-gradient-to-r ${getBadgeColor(
+                combinedAchievementBadge.current_badge
+              )} rounded-xl shadow-lg p-6 border-2`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="text-4xl">
+                    {getBadgeEmoji(combinedAchievementBadge.current_badge)}
+                  </span>
+                  <div>
+                    <h2 className="text-2xl font-bold">
+                      Current Badge: {combinedAchievementBadge.current_badge}
+                    </h2>
+                    {combinedAchievementBadge.next_badge && (
+                      <p className="text-sm opacity-75 mt-1">
+                        Next: {combinedAchievementBadge.next_badge} Badge
+                      </p>
+                    )}
+                  </div>
+                </div>
+                {combinedAchievementBadge.next_badge &&
+                  combinedAchievementBadge.remaining_to_unlock_next_badge && (
+                    <div className="text-right">
+                      <div className="bg-white/80 rounded-lg p-3">
+                        <p className="text-sm opacity-75 mb-1">
+                          Progress to Next Badge
+                        </p>
+                        <p className="text-lg font-semibold">
+                          {
+                            combinedAchievementBadge.remaining_to_unlock_next_badge
+                          }{" "}
+                          more needed
+                        </p>
+                      </div>
+                    </div>
+                  )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -97,26 +178,36 @@ const Dashboard = () => {
             <div className="space-y-3">
               {allAchievements.map((ach) => {
                 const isUnlocked = unlockedAchievementIds.has(ach.id);
+                const isNextAvailableItem = isNextAvailable(ach.name);
+
                 return (
                   <div
                     key={ach.id}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       isUnlocked
                         ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-md"
+                        : isNextAvailableItem
+                        ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-sm"
                         : "bg-gray-50 border-gray-200"
                     }`}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <span
-                            className={`text-lg ${isUnlocked ? "🌟" : "⭐"}`}
-                          >
-                            {isUnlocked ? "🌟" : "⭐"}
+                          <span className="text-lg">
+                            {isUnlocked
+                              ? "🌟"
+                              : isNextAvailableItem
+                              ? "🎯"
+                              : "⭐"}
                           </span>
                           <h3
                             className={`font-semibold ${
-                              isUnlocked ? "text-green-800" : "text-gray-700"
+                              isUnlocked
+                                ? "text-green-800"
+                                : isNextAvailableItem
+                                ? "text-blue-800"
+                                : "text-gray-700"
                             }`}
                           >
                             {ach.name}
@@ -124,17 +215,31 @@ const Dashboard = () => {
                         </div>
                         <p
                           className={`text-sm ${
-                            isUnlocked ? "text-green-600" : "text-gray-500"
+                            isUnlocked
+                              ? "text-green-600"
+                              : isNextAvailableItem
+                              ? "text-blue-600"
+                              : "text-gray-500"
                           }`}
                         >
                           {ach.condition_type}: {ach.condition_value}
                         </p>
                       </div>
-                      {isUnlocked && (
-                        <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                          Unlocked
-                        </div>
-                      )}
+                      <div
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          isUnlocked
+                            ? "bg-green-500 text-white"
+                            : isNextAvailableItem
+                            ? "bg-blue-100 text-blue-700"
+                            : "bg-gray-200 text-gray-600"
+                        }`}
+                      >
+                        {isUnlocked
+                          ? "Unlocked"
+                          : isNextAvailableItem
+                          ? "In Progress"
+                          : "Locked"}
+                      </div>
                     </div>
                   </div>
                 );
@@ -147,7 +252,6 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Badges */}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-2xl font-semibold mb-6 text-gray-900 flex items-center gap-2">
             🎖️ Badges
@@ -156,45 +260,97 @@ const Dashboard = () => {
             <div className="space-y-3">
               {allBadges?.map((badge) => {
                 const isUnlocked = unlockedBadgeIds.has(badge.id);
+                const isCurrentBadge =
+                  combinedAchievementBadge?.current_badge?.toLowerCase() ===
+                  badge.name?.toLowerCase();
+                const isNextBadge =
+                  combinedAchievementBadge?.next_badge?.toLowerCase() ===
+                  badge.name?.toLowerCase();
+
                 return (
                   <div
                     key={badge.id}
                     className={`p-4 rounded-lg border-2 transition-all ${
-                      isUnlocked
+                      isCurrentBadge
+                        ? `bg-gradient-to-r ${getBadgeColor(
+                            badge.name
+                          )} border-2 shadow-md`
+                        : isUnlocked
                         ? "bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 shadow-md"
+                        : isNextBadge
+                        ? "bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200 shadow-sm"
                         : "bg-gray-50 border-gray-200"
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">
-                          {isUnlocked ? "🏅" : "🥉"}
+                          {isCurrentBadge || isUnlocked
+                            ? getBadgeEmoji(badge.name)
+                            : "🥉"}
                         </span>
                         <div>
                           <h3
                             className={`font-semibold ${
-                              isUnlocked ? "text-yellow-800" : "text-gray-700"
+                              isCurrentBadge
+                                ? getBadgeColor(badge.name).split(" ").pop()
+                                : isUnlocked
+                                ? "text-yellow-800"
+                                : isNextBadge
+                                ? "text-purple-800"
+                                : "text-gray-700"
                             }`}
                           >
                             {badge.name}
+                            {isCurrentBadge && (
+                              <span className="ml-2 text-sm font-normal">
+                                (Current)
+                              </span>
+                            )}
                           </h3>
                           <p
                             className={`text-sm ${
-                              isUnlocked ? "text-yellow-600" : "text-gray-500"
+                              isCurrentBadge
+                                ? "text-current opacity-75"
+                                : isUnlocked
+                                ? "text-yellow-600"
+                                : isNextBadge
+                                ? "text-purple-600"
+                                : "text-gray-500"
                             }`}
                           >
                             Requires {badge.required_achievements} achievements
+                            {isNextBadge &&
+                              combinedAchievementBadge?.remaining_to_unlock_next_badge && (
+                                <span className="block text-xs mt-1">
+                                  (
+                                  {
+                                    combinedAchievementBadge.remaining_to_unlock_next_badge
+                                  }{" "}
+                                  more needed)
+                                </span>
+                              )}
                           </p>
                         </div>
                       </div>
                       <div
                         className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          isUnlocked
+                          isCurrentBadge
+                            ? "bg-blue-500 text-white"
+                            : isUnlocked
                             ? "bg-yellow-500 text-white"
+                            : isNextBadge
+                            ? "bg-purple-100 text-purple-700"
                             : "bg-gray-300 text-gray-600"
                         }`}
                       >
-                        {isUnlocked ? "Earned" : "Locked"}
+                        {isCurrentBadge
+                          ? "Current"
+                          : isUnlocked
+                          ? "Earned"
+                          : isNextBadge
+                          ? "Next"
+                          : "Locked"}
                       </div>
                     </div>
                   </div>

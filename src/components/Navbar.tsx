@@ -3,22 +3,16 @@ import { useState } from "react";
 import { useAppSelector } from "../store/Hook";
 
 const Navbar = () => {
-  // const location = useLocation();
-  // const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { userToken, cart } = useAppSelector((state) => ({
-    userToken: state.auth.userToken,
-    cart: state.cart.cart,
-  }));
-
+  const { userToken } = useAppSelector((state) => state.auth);
+  const { cart } = useAppSelector((state) => state.cart);
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
           <div>
             <Link
               to="/"
@@ -29,7 +23,6 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <Link
               to="/cart"

@@ -4,12 +4,14 @@ import type {
   IAllAcheivements,
   IUserAchievement,
   IUserBadge,
+  IUserBadgeAchievementsResponse,
 } from "../../interfaces/responses/Ecom.response";
 import {
   getAllAchievements,
   getAllBadges,
   getUserAchievements,
   getUserBadges,
+  userCombinedBadgeAndAchievements,
 } from "../Action";
 
 interface GamificationState {
@@ -17,6 +19,7 @@ interface GamificationState {
   allAchievements: IAllAcheivements["data"] | null;
   allUserAchievements: IUserAchievement["data"] | null;
   allUserBadges: IUserBadge["data"] | null;
+  combinedAchievementBadge: IUserBadgeAchievementsResponse["data"] | null;
   loading: boolean;
   error: string | null;
 }
@@ -26,6 +29,7 @@ const initialState: GamificationState = {
   allAchievements: null,
   allUserAchievements: null,
   allUserBadges: null,
+  combinedAchievementBadge: null,
   loading: false,
   error: null,
 };
@@ -95,6 +99,18 @@ const gamificationSlice = createSlice({
       .addCase(getUserBadges.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Failed to fetch badges";
+      })
+      .addCase(userCombinedBadgeAndAchievements.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userCombinedBadgeAndAchievements.fulfilled, (state, action) => {
+        state.loading = false;
+        state.combinedAchievementBadge = action.payload;
+      })
+      .addCase(userCombinedBadgeAndAchievements.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to fetch information";
       });
   },
 });

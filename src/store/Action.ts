@@ -223,6 +223,21 @@ export const getUserBadges = createAsyncThunk<
   }
 });
 
+export const userCombinedBadgeAndAchievements = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("user/user-badge-achievements", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.get(
+      `${service_url}/user/util/user-combined-achievements`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
 export const getUserCashBack = createAsyncThunk<
   any,
   void,

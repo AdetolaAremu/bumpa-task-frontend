@@ -38,7 +38,6 @@ const Cart = () => {
     const resultAction = await dispatch(addToCart({ product_id, quantity }));
     if (addToCart.fulfilled.match(resultAction)) {
       toast.success("Cart updated successfully");
-      // Refresh cart data to update UI immediately
       dispatch(getUserCart());
     } else {
       toast.error("Failed to add to cart");
@@ -221,7 +220,6 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Item Total */}
                 <div className="text-right">
                   <p className="text-lg font-bold text-gray-800">
                     ₦{(Number(item.price) * item.quantity).toLocaleString()}
@@ -234,7 +232,6 @@ const Cart = () => {
             ))}
           </div>
 
-          {/* Clear Cart Button */}
           <div className="mt-6">
             <button
               onClick={clearEntireCart}

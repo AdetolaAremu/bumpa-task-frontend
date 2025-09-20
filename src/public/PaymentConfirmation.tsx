@@ -38,7 +38,6 @@ const PaymentConfirmation = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br flex items-center justify-center p-6">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-        {/* Loading State */}
         {loading && (
           <div className="flex flex-col items-center justify-center space-y-4">
             <div className="w-12 h-12 border-4 border-green-500 border-dashed rounded-full animate-spin"></div>
@@ -46,7 +45,6 @@ const PaymentConfirmation = () => {
           </div>
         )}
 
-        {/* Error State */}
         {!loading && error && (
           <div>
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -78,7 +76,6 @@ const PaymentConfirmation = () => {
           </div>
         )}
 
-        {/* Success State */}
         {!loading && !error && (
           <>
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -105,6 +102,35 @@ const PaymentConfirmation = () => {
               Thank you for your purchase. Your order has been confirmed and
               will be processed shortly.
             </p>
+
+            {/* Cashback Notification */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center justify-center mb-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5 text-green-600 mr-2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.268-.268-1.268-.732 0-.464.543-.732 1.268-.732.725 0 1.268.268 1.268.732"
+                  />
+                </svg>
+                <span className="text-sm font-semibold text-green-700">
+                  🎉 Cashback Earned!
+                </span>
+              </div>
+              <p className="text-center text-green-700 font-bold text-lg">
+                ₦300 cashback credited to your wallet
+              </p>
+              <p className="text-center text-green-600 text-sm mt-1">
+                Use it on your next purchase!
+              </p>
+            </div>
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
               <div className="flex justify-between items-center mb-2">
