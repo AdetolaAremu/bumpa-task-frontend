@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type {
+  IAllAcheivements,
   IAllBadges,
   IAllProducts,
   IGetAProduct,
@@ -35,7 +36,7 @@ interface AppState {
   userStat: IUserStats["data"] | null;
   allOrders: IOrdersResponse["data"] | null;
   allBadges: IAllBadges["data"] | null;
-  allAchievements: IUserAchievement["data"] | null;
+  allAchievements: IAllAcheivements["data"] | null;
   allUserAchievements: IUserAchievement["data"] | null;
   allUserBadges: IUserBadge["data"] | null;
   userCashback: string | null;
@@ -65,7 +66,10 @@ const initialState: AppState = {
   userToken: localStorage.getItem("token"),
   product: null,
   userStat: null,
-  allOrders: null,
+  allOrders: {
+    current_page: 1,
+    data: [],
+  },
   allBadges: null,
   allAchievements: null,
   allUserAchievements: null,
@@ -291,7 +295,7 @@ const appSlice = createSlice({
         state.loading = false;
         state.userCashback = action.payload;
       })
-      .addCase(getUserBadges.rejected, (state, action) => {
+      .addCase(getUserCashBack.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Failed to fetch cashback";
       });

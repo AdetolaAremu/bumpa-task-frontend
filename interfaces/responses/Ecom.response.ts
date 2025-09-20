@@ -117,35 +117,44 @@ export interface IUserStats {
   };
 }
 
+export interface IOrder {}
+
+// Single order item (inside an order)
+export interface IOrderItem {
+  id: number;
+  order_id: number;
+  product_id: number;
+  quantity: number;
+  price: string;
+  title: string;
+  image: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Single order
+export interface IOrder {
+  id: number;
+  order_code: string;
+  user_id: number;
+  total_amount: string;
+  payment_status: "paid" | "not_paid" | "failed" | string;
+  order_status: "pending" | "successful" | "canceled" | string;
+  transaction_type: string;
+  payment_reference: string;
+  cashback_unlocked: number;
+  created_at: string;
+  updated_at: string;
+  items: IOrderItem[];
+}
+
+// Orders API response
 export interface IOrdersResponse {
   success: boolean;
   message: string;
   data: {
     current_page: number;
-    data: {
-      id: number;
-      order_code: string;
-      user_id: number;
-      total_amount: string;
-      payment_status: "paid" | "not_paid" | "failed" | string;
-      order_status: "pending" | "successful" | "canceled" | string;
-      transaction_type: string;
-      payment_reference: string;
-      cashback_unlocked: number;
-      created_at: string;
-      updated_at: string;
-      items: {
-        id: number;
-        order_id: number;
-        product_id: number;
-        quantity: number;
-        price: string;
-        title: string;
-        image: string;
-        created_at: string;
-        updated_at: string;
-      }[];
-    }[];
+    data: IOrder[];
   };
 }
 
