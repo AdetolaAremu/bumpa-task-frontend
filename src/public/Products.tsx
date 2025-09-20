@@ -75,7 +75,6 @@ const Products = () => {
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
           <p className="text-gray-600">
@@ -83,21 +82,18 @@ const Products = () => {
           </p>
         </div>
 
-        {/* Loading State */}
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
           </div>
         ) : (
           <>
-            {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products?.data?.map((product) => (
                 <div
                   key={product.id}
-                  className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
+                  className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full"
                 >
-                  {/* Product Image */}
                   <div className="relative overflow-hidden">
                     <img
                       src={product?.image_url}
@@ -107,32 +103,36 @@ const Products = () => {
                   </div>
 
                   {/* Product Info */}
-                  <div className="p-4">
+                  <div className="p-4 flex-1 flex flex-col">
                     <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
                       {product?.title}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">
                       {product?.description}
                     </p>
+
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <span className="text-lg font-bold text-gray-900">
-                          NGN {product?.price}
+                          NGN{" "}
+                          {Number(product?.price).toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </span>
                       </div>
                     </div>
 
-                    {/* Conditional Button */}
                     {isProductInCart(product.id) ? (
                       <button
-                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto flex items-center justify-center gap-2"
                         onClick={() => handleRemoveFromCart(product.id)}
                       >
                         Remove from Cart
                       </button>
                     ) : (
                       <button
-                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto flex items-center justify-center gap-2"
                         onClick={() => handleAddToCart(product.id)}
                       >
                         Add to Cart
@@ -143,10 +143,8 @@ const Products = () => {
               ))}
             </div>
 
-            {/* No Results */}
             {products?.total === 0 && (
               <div className="text-center py-12">
-                <div className="text-gray-400 mb-4"></div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
                   No products found
                 </h3>

@@ -100,7 +100,16 @@ const Navbar = () => {
               )}
             </Link>
 
-            <button
+            {userToken && (
+              <Link
+                to="/user/home"
+                className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+              >
+                Dashboard
+              </Link>
+            )}
+
+            {/* <button
               onClick={toggleMenu}
               className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg focus:outline-none transition-all duration-200"
               aria-label="Toggle menu"
@@ -134,7 +143,7 @@ const Navbar = () => {
                   />
                 </svg>
               )}
-            </button>
+            </button> */}
           </div>
         </div>
 
