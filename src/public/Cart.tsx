@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store/Store";
 import { useAppSelector } from "../store/Hook";
@@ -10,11 +10,10 @@ import {
   removeFromCart,
 } from "../store/Action";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, cart, getUrl } = useAppSelector((state) => state.product);
+  const { loading, cart } = useAppSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getUserCart());

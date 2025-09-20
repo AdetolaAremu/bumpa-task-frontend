@@ -2,7 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import type {
   IAllProducts,
   IGetUserCart,
-  ILoginUser,
 } from "../../interfaces/responses/Ecom.response";
 import type { IAllPagination } from "../../interfaces/types/Ecom.Type";
 import axiosInstance from "../util/AxiosInsance";
@@ -112,5 +111,21 @@ export const proceedToPayment = createAsyncThunk<
     return response.data.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const confirmPayment = createAsyncThunk<
+  any,
+  { reference_no: string },
+  { rejectValue: string }
+>("confirmPayment", async (data, thunkAPI) => {
+  try {
+    const response = await axiosInstance.post(
+      `${service_url}/user/order/confirm`,
+      data
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.response.data.message);
   }
 });

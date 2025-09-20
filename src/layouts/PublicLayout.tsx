@@ -3,12 +3,7 @@ import Products from "../public/Products";
 import Navbar from "../components/Navbar";
 import Cart from "../public/Cart";
 import LoginPage from "../public/Login";
-// import Home from "../views/Home";
-// import Navbar from "../components/Navbar";
-// import AllUrl from "../views/AllUrl";
-// import Statistics from "../views/Statistics";
-// import Documentation from "../views/Documentation";
-// import Redirection from "../views/Redirection";
+import PaymentConfirmation from "../public/PaymentConfirmation";
 
 const PublicLayout = () => {
   // const location = useLocation();
@@ -27,6 +22,10 @@ const PublicLayout = () => {
             <Route path="/" element={<Products />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/payment-confirmation"
+              element={<PaymentConfirmation />}
+            />
           </Routes>
         </div>
       </div>

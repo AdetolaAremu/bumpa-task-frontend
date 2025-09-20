@@ -8,6 +8,7 @@ import type {
 import {
   addToCart,
   clearUserCart,
+  confirmPayment,
   getAllProducts,
   getUserCart,
   loginUser,
@@ -161,6 +162,19 @@ const appSlice = createSlice({
       .addCase(proceedToPayment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Failed to initiate payment";
+      })
+
+      .addCase(confirmPayment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(confirmPayment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getUrl = action.payload;
+      })
+      .addCase(confirmPayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to verify payment";
       });
   },
 });
