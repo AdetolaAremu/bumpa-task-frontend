@@ -237,3 +237,20 @@ export const getUserCashBack = createAsyncThunk<
     return thunkAPI.rejectWithValue(error.message);
   }
 });
+
+export const logoutUser = createAsyncThunk<void, void, { rejectValue: string }>(
+  "user/user-logout",
+  async (_, thunkAPI) => {
+    try {
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+
+      return;
+    } catch (error: any) {
+      localStorage.removeItem("token");
+      sessionStorage.removeItem("token");
+
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);

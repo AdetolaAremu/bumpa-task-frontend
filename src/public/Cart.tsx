@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, cart } = useAppSelector((state) => state.product);
+  const { loading, cart } = useAppSelector((state) => state.cart);
 
   useEffect(() => {
     dispatch(getUserCart());

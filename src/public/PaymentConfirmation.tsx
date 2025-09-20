@@ -15,7 +15,7 @@ const PaymentConfirmation = () => {
   const trxref = queryParams.get("trxref");
   const reference = queryParams.get("reference");
 
-  const { loading, error } = useAppSelector((state) => state.product);
+  const { loading, error } = useAppSelector((state) => state.payment);
 
   const confirmOrderPayment = async () => {
     const resultAction = await dispatch(

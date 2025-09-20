@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify"; // or whatever toast library you're using
+import { useAppDispatch, useAppSelector } from "../store/Hook";
+import type { IAllPagination } from "../interfaces/types/Ecom.type";
 import {
-  getAllProducts,
   addToCart,
+  getAllProducts,
   getUserCart,
   removeFromCart,
 } from "../store/Action";
-import type { IAllPagination } from "../interfaces/types/Ecom.type";
-import type { AppDispatch } from "../store/Store";
-import { useAppSelector } from "../store/Hook";
-import { toast } from "react-toastify";
+// import { useAppDispatch, useAppSelector } from '../hooks/redux';
+// import { getAllProducts } from '../actions/productActions';
+// import { addToCart, removeFromCart, getUserCart } from '../actions/cartActions';
+// import type { IAllPagination } from '../interfaces/requests/Ecom.request';
 
 const Products = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { products, loading, cart } = useAppSelector((state) => state.product);
+  const dispatch = useAppDispatch();
+
+  const { products, loading } = useAppSelector((state) => state.products);
+  const { cart } = useAppSelector((state) => state.cart);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -31,7 +35,6 @@ const Products = () => {
     const resultAction = await dispatch(addToCart({ product_id, quantity: 1 }));
     if (addToCart.fulfilled.match(resultAction)) {
       toast.success("Added to cart!");
-      // Refresh cart data to update UI immediately
       dispatch(getUserCart());
     } else {
       toast.error("Failed to add to cart");

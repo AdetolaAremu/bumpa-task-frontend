@@ -12,7 +12,7 @@ const Orders = () => {
   const [selectedOrder, setSelectedOrder] = useState<IOrder | null>();
   const [showOrderDetails, setShowOrderDetails] = useState(false);
 
-  const { allOrders, loading } = useAppSelector((state) => state.product);
+  const { allOrders, loading } = useAppSelector((state) => state.orders);
 
   useEffect(() => {
     const params = { page: 1, pageSize: 20 };

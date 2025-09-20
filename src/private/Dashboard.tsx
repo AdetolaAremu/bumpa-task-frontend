@@ -14,14 +14,17 @@ import StatCard from "../components/StatCard";
 const Dashboard = () => {
   const dispatch = useDispatch<AppDispatch>();
 
+  const { userStat, loading: userLoading } = useAppSelector(
+    (state) => state.user
+  );
+
   const {
-    userStat,
     allAchievements,
     allBadges,
     allUserAchievements,
     allUserBadges,
-    loading,
-  } = useAppSelector((state) => state.product);
+    loading: gamificationLoading,
+  } = useAppSelector((state) => state.gamification);
 
   useEffect(() => {
     dispatch(getUserStats());
@@ -48,7 +51,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-gray-900 mb-8">Dashboard</h1>
 
-        {loading && (
+        {gamificationLoading && userLoading && (
           <div className="flex items-center justify-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             <span className="ml-3 text-gray-600">Loading...</span>
