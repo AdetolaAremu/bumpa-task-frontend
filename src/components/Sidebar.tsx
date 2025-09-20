@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../store/Hook";
+import { logoutUser } from "../store/Action";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -9,6 +11,14 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const callLogout = async () => {
+    await dispatch(logoutUser());
+
+    navigate("/");
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,6 +98,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             >
               Orders
             </NavLink>
+          </li>
+          <li
+            className="text-gray-300 rounded-md pt-2 cursor-pointer"
+            onClick={() => callLogout()}
+          >
+            <div className="hover:bg-white hover:text-green-600 p-2">
+              Logout
+            </div>
           </li>
         </ul>
       </div>

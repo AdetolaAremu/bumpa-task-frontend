@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../store/Hook";
 import type { IAllPagination } from "../interfaces/types/Ecom.type";
@@ -14,6 +14,7 @@ const Products = () => {
 
   const { products, loading } = useAppSelector((state) => state.products);
   const { cart } = useAppSelector((state) => state.cart);
+  const { userToken } = useAppSelector((state) => state.auth);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -53,14 +54,12 @@ const Products = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
             Product Catalog
           </h1>
 
-          {/* Search and Filter Bar */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-1 max-w-md">
               <input
@@ -102,7 +101,6 @@ const Products = () => {
                     />
                   </div>
 
-                  {/* Product Info */}
                   <div className="p-4 flex-1 flex flex-col">
                     <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
                       {product?.title}
@@ -125,6 +123,7 @@ const Products = () => {
 
                     {isProductInCart(product.id) ? (
                       <button
+                        disabled={!userToken}
                         className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto flex items-center justify-center gap-2"
                         onClick={() => handleRemoveFromCart(product.id)}
                       >
@@ -132,6 +131,7 @@ const Products = () => {
                       </button>
                     ) : (
                       <button
+                        disabled={!userToken}
                         className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto flex items-center justify-center gap-2"
                         onClick={() => handleAddToCart(product.id)}
                       >

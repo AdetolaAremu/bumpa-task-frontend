@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 const Cart = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { loading, cart } = useAppSelector((state) => state.cart);
+  const { userToken } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getUserCart());
@@ -89,7 +90,7 @@ const Cart = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
@@ -107,7 +108,7 @@ const Cart = () => {
           </p>
           <button
             onClick={() => window.history.back()}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
           >
             Continue Shopping
           </button>
@@ -278,8 +279,13 @@ const Cart = () => {
           </div>
 
           <button
+            disabled={!userToken}
             onClick={redirectToCheckout}
-            className="w-full mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold shadow-md hover:from-blue-700 hover:to-indigo-700 transition transform hover:scale-[1.02]"
+            className={`w-full mt-6 py-3 rounded-xl font-semibold shadow-md transition transform ${
+              !userToken
+                ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                : "bg-gradient-to-r from-green-600 to-indigo-600 text-white hover:from-green-700 hover:to-indigo-700 hover:scale-[1.02]"
+            }`}
           >
             Proceed to Checkout
           </button>
@@ -287,7 +293,7 @@ const Cart = () => {
           <div className="mt-4 text-center">
             <button
               onClick={() => window.history.back()}
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              className="text-green-600 hover:text-green-800 text-sm font-medium"
             >
               ← Continue Shopping
             </button>
