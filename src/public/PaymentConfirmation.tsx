@@ -67,12 +67,6 @@ const PaymentConfirmation = () => {
               Payment Failed
             </h1>
             <p className="text-gray-600 mb-6">{error}</p>
-            <Link
-              to="/"
-              className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block"
-            >
-              Try Again
-            </Link>
           </div>
         )}
 
@@ -150,7 +144,7 @@ const PaymentConfirmation = () => {
 
             <div className="space-y-3">
               <Link
-                to="/orders"
+                to="/user/orders"
                 className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-block"
               >
                 Track Your Order
