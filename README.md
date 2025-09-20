@@ -19,32 +19,6 @@ A modern eCommerce web application built with **React**, **TypeScript**, and **R
 
 ---
 
-## 🗂 Project Structure
-
-src/
-├─ assets/ # Static assets (images, SVGs)
-│ └─ react.svg
-├─ components/ # Reusable React components
-
-├─ interfaces/ # TypeScript interfaces
-
-├─ layouts/ # Layout components
-
-├─ private/ # Private routes/pages
-
-├─ store/ # Redux Toolkit store
-│ ├─ slices/
-
-│ ├─ Action.ts
-│ ├─ Hook.ts
-│ └─ Store.ts
-├─ App.tsx
-├─ App.css
-├─ index.css
-└─ main.tsx
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -62,4 +36,10 @@ Clone the repository:
 ```bash
 git clone https://github.com/AdetolaAremu/bumpa-task-frontend
 cd bumpa-task-frontend
+```
+
+To run the project
+
+```bash
+npm run dev
 ```
