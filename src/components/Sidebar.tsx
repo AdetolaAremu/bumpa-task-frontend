@@ -1,8 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { NavLink, Route } from "react-router-dom";
-import PublicLayout from "../layouts/PublicLayout";
-// import Logo from "../assets/Logo.png";
-// import { Hamburger } from "./IconUtility";
+import { NavLink } from "react-router-dom";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,21 +7,16 @@ interface SidebarProps {
   toggleModal: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  isOpen,
-  toggleSidebar,
-  toggleModal,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target as Node)
       ) {
-        toggleSidebar(); // Close the sidebar when clicking outside
+        toggleSidebar();
       }
     };
 
@@ -41,7 +33,21 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={toggleSidebar}
           className="text-white focus:outline-none"
         >
-          {/* {!isOpen && <Hamburger />} */}
+          {!isOpen && (
+            <svg
+              className="w-6 h-6 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
         </button>
       </div>
 
@@ -49,12 +55,10 @@ const Sidebar: React.FC<SidebarProps> = ({
         ref={sidebarRef}
         className={`fixed inset-y-0 left-0 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:translate-x-0 transition-transform duration-300 ease-in-out bg-[#7717D7] w-64 p-4 z-40`}
+        } md:relative md:translate-x-0 transition-transform duration-300 ease-in-out bg-[#216a09] w-64 p-4 z-40`}
       >
-        <h2 className="text-white text-2xl font-semibold my-6">
-          {/* <Route path="/*" element={<PublicLayout />} /> */}
-          {/* <img src={Logo} alt="Logo" /> */}
-          <img src="" alt="Logo" />
+        <h2 className="text-white text-2xl font-semibold my-9">
+          <NavLink to="/">Bumpa</NavLink>
         </h2>
         <ul>
           <li className="text-gray-300 rounded-md">
@@ -63,8 +67,8 @@ const Sidebar: React.FC<SidebarProps> = ({
               className={({ isActive }) =>
                 `block p-2 rounded-md ${
                   isActive
-                    ? "bg-[#ba81f2] text-white"
-                    : "hover:bg-[#ba81f2] hover:text-white"
+                    ? "bg-white text-green-600"
+                    : "hover:bg-white hover:text-green-600"
                 }`
               }
             >
@@ -73,25 +77,17 @@ const Sidebar: React.FC<SidebarProps> = ({
           </li>
           <li className="text-gray-300 rounded-md pt-2">
             <NavLink
-              to="/user/contacts"
+              to="/user/orders"
               className={({ isActive }) =>
                 `block p-2 rounded-md ${
                   isActive
-                    ? "bg-[#ba81f2] text-white"
-                    : "hover:bg-[#ba81f2] hover:text-white"
+                    ? "bg-white text-green-600"
+                    : "hover:bg-white hover:text-green-600"
                 }`
               }
             >
-              Contacts
+              Orders
             </NavLink>
-          </li>
-          <li
-            className="text-gray-300 rounded-md pt-2 cursor-pointer"
-            onClick={toggleModal}
-          >
-            <div className="hover:bg-[#ba81f2] hover:text-white p-2">
-              Logout
-            </div>
           </li>
         </ul>
       </div>

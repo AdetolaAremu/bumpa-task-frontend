@@ -1,120 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "../store/Hook";
+import type { IAllPagination } from "../interfaces/types/Ecom.type";
+import {
+  addToCart,
+  getAllProducts,
+  getUserCart,
+  removeFromCart,
+} from "../store/Action";
 
 const Products = () => {
+  const dispatch = useAppDispatch();
+
+  const { products, loading } = useAppSelector((state) => state.products);
+  const { cart } = useAppSelector((state) => state.cart);
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  // Pseudo product data
-  const products = [
-    {
-      name: "Wireless Bluetooth Headphones",
-      price: 89.99,
-      originalPrice: 119.99,
-      category: "electronics",
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=300&fit=crop&crop=center",
-      badge: "Sale",
-      description: "Premium sound quality with noise cancellation",
-    },
-    {
-      name: "Organic Cotton T-Shirt",
-      price: 24.99,
-      category: "clothing",
-      image:
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop&crop=center",
-      badge: "Eco-Friendly",
-      description: "Soft, sustainable cotton blend",
-    },
-    {
-      name: "Smart Fitness Watch",
-      price: 199.99,
-      category: "electronics",
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop&crop=center",
-      badge: "Bestseller",
-      description: "Track your health and fitness goals",
-    },
-    {
-      name: "Artisan Coffee Beans",
-      price: 16.99,
-      category: "food",
-      image:
-        "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=300&fit=crop&crop=center",
-      badge: "Premium",
-      description: "Single origin, freshly roasted",
-    },
-    {
-      name: "Minimalist Backpack",
-      price: 79.99,
-      originalPrice: 99.99,
-      category: "accessories",
-      image:
-        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=300&fit=crop&crop=center",
-      badge: "Sale",
-      description: "Durable, water-resistant design",
-    },
-    {
-      name: "Skincare Serum Set",
-      price: 45.99,
-      category: "beauty",
-      image:
-        "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=300&h=300&fit=crop&crop=center",
-      badge: "New",
-      description: "Vitamin C and hyaluronic acid blend",
-    },
-    {
-      name: "Gaming Mechanical Keyboard",
-      price: 129.99,
-      category: "electronics",
-      image:
-        "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&h=300&fit=crop&crop=center",
-      description: "RGB backlit with tactile switches",
-    },
-    {
-      name: "Yoga Mat Pro",
-      price: 34.99,
-      category: "fitness",
-      image:
-        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=300&fit=crop&crop=center",
-      badge: "Eco-Friendly",
-      description: "Non-slip, extra thick cushioning",
-    },
-  ];
+  useEffect(() => {
+    const params: IAllPagination = {
+      pageSize: 20,
+      page: 1,
+      searchQuery: searchTerm,
+    };
+    dispatch(getAllProducts(params));
+    dispatch(getUserCart());
+  }, [dispatch, searchTerm]);
 
-  const categories = [
-    { value: "all", label: "All Products" },
-    { value: "electronics", label: "Electronics" },
-    { value: "clothing", label: "Clothing" },
-    { value: "beauty", label: "Beauty" },
-    { value: "food", label: "Food & Drinks" },
-    { value: "accessories", label: "Accessories" },
-    { value: "fitness", label: "Fitness" },
-  ];
-
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const getBadgeColor = (badge) => {
-    switch (badge) {
-      case "Sale":
-        return "bg-red-500";
-      case "New":
-        return "bg-green-500";
-      case "Bestseller":
-        return "bg-blue-500";
-      case "Premium":
-        return "bg-purple-500";
-      case "Eco-Friendly":
-        return "bg-emerald-500";
-      default:
-        return "bg-gray-500";
+  const handleAddToCart = async (product_id: number) => {
+    const resultAction = await dispatch(addToCart({ product_id, quantity: 1 }));
+    if (addToCart.fulfilled.match(resultAction)) {
+      toast.success("Added to cart!");
+      dispatch(getUserCart());
+    } else {
+      toast.error("Failed to add to cart");
     }
+  };
+
+  const handleRemoveFromCart = async (product_id: number) => {
+    const resultAction = await dispatch(removeFromCart({ product_id }));
+    if (removeFromCart.fulfilled.match(resultAction)) {
+      toast.success("Removed from cart!");
+      dispatch(getUserCart());
+    } else {
+      toast.error("Failed to remove from cart");
+    }
+  };
+
+  const isProductInCart = (product_id: number) => {
+    return cart?.items?.some((item) => item.product_id === product_id);
   };
 
   return (
@@ -129,7 +63,6 @@ const Products = () => {
           {/* Search and Filter Bar */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-1 max-w-md">
-              {/* <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
               <input
                 type="text"
                 placeholder="Search products..."
@@ -138,107 +71,89 @@ const Products = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            <div className="flex items-center gap-2">
-              {/* <Filter className="text-gray-400 w-5 h-5" /> */}
-              <select
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-6">
           <p className="text-gray-600">
-            Showing {filteredProducts.length} of {products.length} products
+            Showing {products?.total || 0} products
           </p>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
-            >
-              {/* Product Image */}
-              <div className="relative overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products?.data?.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group flex flex-col h-full"
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={product?.image_url}
+                      alt={product?.title}
+                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
 
-                {/* Badge */}
-                {product.badge && (
-                  <span
-                    className={`absolute top-3 left-3 px-2 py-1 text-xs font-semibold text-white rounded-full ${getBadgeColor(
-                      product.badge
-                    )}`}
-                  >
-                    {product.badge}
-                  </span>
-                )}
-              </div>
+                  {/* Product Info */}
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
+                      {product?.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 flex-1">
+                      {product?.description}
+                    </p>
 
-              {/* Product Info */}
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
-                  {product.name}
-                </h3>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-gray-900">
+                          NGN{" "}
+                          {Number(product?.price).toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </div>
+                    </div>
 
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                  {product.description}
-                </p>
-
-                {/* Price */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-bold text-gray-900">
-                      ${product.price}
-                    </span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-gray-500 line-through">
-                        ${product.originalPrice}
-                      </span>
+                    {isProductInCart(product.id) ? (
+                      <button
+                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto flex items-center justify-center gap-2"
+                        onClick={() => handleRemoveFromCart(product.id)}
+                      >
+                        Remove from Cart
+                      </button>
+                    ) : (
+                      <button
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors mt-auto flex items-center justify-center gap-2"
+                        onClick={() => handleAddToCart(product.id)}
+                      >
+                        Add to Cart
+                      </button>
                     )}
                   </div>
                 </div>
+              ))}
+            </div>
 
-                {/* Add to Cart Button */}
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
-                  {/* <ShoppingCart className="w-4 h-4" /> */}
-                  Add to Cart
-                </button>
+            {products?.total === 0 && (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  No products found
+                </h3>
+                <p className="text-gray-600">
+                  Try adjusting your search or filter criteria
+                </p>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* No Results */}
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
-              {/* <Search className="w-16 h-16 mx-auto" /> */}
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              No products found
-            </h3>
-            <p className="text-gray-600">
-              Try adjusting your search or filter criteria
-            </p>
-          </div>
+            )}
+          </>
         )}
       </main>
     </div>

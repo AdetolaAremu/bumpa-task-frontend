@@ -1,26 +1,20 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
-// import Home from "../views/private/Home";
 import { useEffect, useState } from "react";
-// import Contact from "../views/private/Contact";
-// import ContactDetails from "../views/private/ContactDetails";
-// import CreateContact from "../views/private/CreateContact";
-// import EditContact from "../views/private/EditContact";
-// import LogoutModal from "../components/LogoutModal";
-// import { useAppDispatch, useTypedSelector } from "../utils/Hook";
-// import {
-//   callLogoutUser,
-//   getLoggedInUser,
-// } from "../views/private/actions/actions";
 import Sidebar from "../components/Sidebar";
 import Dashboard from "../private/Dashboard";
+import Orders from "../private/Orders";
+import { useAppDispatch, useAppSelector } from "../store/Hook";
+import { getUserCashBack, logoutUser } from "../store/Action";
 
 const Private = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
-  // const { loggedInUser } = useTypedSelector((state) => state.private);
+
+  const { userToken } = useAppSelector((state) => state.auth);
+  const { userCashback } = useAppSelector((state) => state.user);
 
   const navigate = useNavigate();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -30,21 +24,17 @@ const Private = () => {
     setIsOpenModal(!isOpenModal);
   };
 
-  const logoutUser = () => {
-    // dispatch(callLogoutUser());
-    // navigate("/auth/login");
-  };
+  useEffect(() => {
+    dispatch(getUserCashBack());
 
-  // useEffect(() => {
-  //   const getToken = localStorage.getItem("jwtToken"); // we need to check if user is logged in
+    if (!userToken) {
+      navigate("/");
 
-  //   if (!getToken) {
-  //     navigate("/auth/login");
-  //     return;
-  //   }
+      dispatch(logoutUser());
 
-  //   dispatch(getLoggedInUser());
-  // }, [dispatch, navigate]);
+      return;
+    }
+  }, [dispatch, navigate]);
 
   return (
     <div className="flex h-screen">
@@ -54,28 +44,27 @@ const Private = () => {
         toggleModal={toggleModal}
       />
 
-      {/* <LogoutModal
-        modal={isOpenModal}
-        onClose={toggleModal}
-        onDelete={logoutUser}
-      /> */}
-
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Bar */}
         <div className="flex justify-end pt-3 px-10 bg-gray-100">
-          <div className="pt-4">
-            Hi, James
-            {/* {loggedInUser?.firstName} {loggedInUser?.lastName} */}
+          <div
+            className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 
+        hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl 
+        transform hover:-translate-y-0.5 transition-all duration-200 mt-3"
+          >
+            ₦{userCashback} <span className="text-xs">cashback</span>
           </div>
         </div>
-        <div className="flex-1 p-6 bg-gray-100">
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/contacts" element={<Contact />} />
-            <Route path="/create-contact" element={<CreateContact />} />
-            <Route path="/contacts/:id" element={<ContactDetails />} />
-            <Route path="/contacts/edit/:id" element={<EditContact />} /> */}
-          </Routes>
-        </div>
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto p-6 bg-gray-100">
+          <div className="max-w-7xl mx-auto">
+            <Routes>
+              <Route path="/home" element={<Dashboard />} />
+              <Route path="/orders" element={<Orders />} />
+            </Routes>
+          </div>
+        </main>
       </div>
     </div>
   );
