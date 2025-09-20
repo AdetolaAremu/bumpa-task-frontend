@@ -89,7 +89,7 @@ export interface IGetUserCart {
       product_id: number;
       user_id: number;
       title: string;
-      price: string;
+      price: string | number;
       quantity: number;
       image: string;
       created_at: string;

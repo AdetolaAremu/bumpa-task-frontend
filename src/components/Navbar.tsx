@@ -7,7 +7,11 @@ const Navbar = () => {
   const currentPath = location.pathname;
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { userToken } = useAppSelector((state) => state.product);
+  const { userToken, cart } = useAppSelector((state) => state.product);
+
+  // Calculate total items in cart
+  // const cartItemsCount =
+  //   cart?.items?.reduce((total, item) => total + item.quantity, 0) || 0;
 
   const isActive = (path: string) => currentPath === path;
 
@@ -32,7 +36,53 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Link
               to="/cart"
-              className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition-colors duration-200 flex"
+              className="px-4 py-2 text-gray-700 hover:text-green-600 font-medium transition-colors duration-200 flex items-center relative group"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 group-hover:scale-110 transition-transform duration-200"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
+                />
+              </svg>
+              {/* Cart Counter Badge */}
+              {cart?.items.length && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1 shadow-lg animate-pulse">
+                  {cart?.items?.length > 99 ? "99+" : cart?.items?.length}
+                </span>
+              )}
+            </Link>
+            {!userToken && (
+              <>
+                <Link
+                  to="/login"
+                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center space-x-3">
+            {/* Mobile Cart Icon */}
+            <Link
+              to="/cart"
+              className="p-2 text-gray-700 hover:text-green-600 transition-colors duration-200 relative"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,30 +98,14 @@ const Navbar = () => {
                   d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
                 />
               </svg>
-              <span className="bg-green-600 p-1 text-white rounded-full px-1 -ml-1 text-xs">
-                0
-              </span>
+              {/* Mobile Cart Counter Badge */}
+              {cart?.items?.length && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-lg">
+                  {cart?.items?.length > 99 ? "99+" : cart?.items?.length}
+                </span>
+              )}
             </Link>
-            {!userToken && (
-              <>
-                <Link
-                  to="/login"
-                  className="px-6 py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-greem-700 hover:to-emerald-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-200"
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
-          </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
             <button
               onClick={toggleMenu}
               className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg focus:outline-none transition-all duration-200"

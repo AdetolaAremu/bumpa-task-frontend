@@ -67,7 +67,6 @@ export const getUserCart = createAsyncThunk<
 >("cart/getUserCart", async (_, thunkAPI) => {
   try {
     const response = await axiosInstance.get(`${service_url}/user/cart`);
-    // console.log("res", response.data.data);
     return response.data.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);
@@ -83,6 +82,33 @@ export const removeFromCart = createAsyncThunk<
     const response = await axiosInstance.delete(
       `${service_url}/user/cart/${data.product_id}`
     );
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const clearUserCart = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("cart/getUserCartClear", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.delete(`${service_url}/user/cart`);
+    return response.data.data;
+  } catch (error: any) {
+    return thunkAPI.rejectWithValue(error.message);
+  }
+});
+
+export const proceedToPayment = createAsyncThunk<
+  any,
+  void,
+  { rejectValue: string }
+>("cart/paymentCheckout", async (_, thunkAPI) => {
+  try {
+    const response = await axiosInstance.get(`${service_url}/user/order`);
+    // console.log("response", response.data.data);
     return response.data.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(error.message);

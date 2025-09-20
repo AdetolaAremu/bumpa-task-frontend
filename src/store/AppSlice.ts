@@ -5,13 +5,21 @@ import type {
   IGetUserCart,
   ILoginUser,
 } from "../../interfaces/responses/Ecom.response";
-import { addToCart, getAllProducts, getUserCart, loginUser } from "./Action";
+import {
+  addToCart,
+  clearUserCart,
+  getAllProducts,
+  getUserCart,
+  loginUser,
+  proceedToPayment,
+} from "./Action";
 
 interface AppState {
   products: IAllProducts["data"];
   product: IGetAProduct["data"] | null;
   cart: IGetUserCart["data"] | null;
   userToken: string | null;
+  getUrl: string | null;
   loading: boolean;
   error: string | null;
   loginError: string | null;
@@ -35,6 +43,7 @@ const initialState: AppState = {
   userToken: localStorage.getItem("token"),
   product: null,
   cart: null,
+  getUrl: null,
   loading: false,
   error: null,
   loginError: null,
@@ -120,13 +129,38 @@ const appSlice = createSlice({
         state.error = null;
       })
       .addCase(getUserCart.fulfilled, (state, action) => {
-        // console.log("Payload in reducer:", action.payload);
         state.loading = false;
         state.cart = action.payload;
       })
       .addCase(getUserCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Failed to fetch cart";
+      })
+
+      .addCase(clearUserCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(clearUserCart.fulfilled, (state) => {
+        state.loading = false;
+        state.cart = null;
+      })
+      .addCase(clearUserCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to clear cart";
+      })
+
+      .addCase(proceedToPayment.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(proceedToPayment.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getUrl = action.payload;
+      })
+      .addCase(proceedToPayment.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? "Failed to initiate payment";
       });
   },
 });
